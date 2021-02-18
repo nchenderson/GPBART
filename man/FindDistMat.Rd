@@ -8,7 +8,7 @@ This function computes all pairwise distances between covariate vectors
 using the BART-based distance measure.
 }
 \usage{
-FindDistMat(X)
+FindDistMat(X, tau.max=100, weights = NULL)
 }
 \arguments{
   \item{X}{
@@ -45,9 +45,16 @@ Nicholas Henderson
 data("iris")
 X <- as.matrix(iris[,1:4])
 Dmat <- FindDistMat(X)
-head(Dmat)
+
+## Compare with traditional pairwise distances
+SD <- matrix(0, nrow(X), nrow(X))
+for(i in 1:nrow(X)) {
+  for(j in 1:nrow(X)) {
+    SD[i,j] <- sum((X[i,] - X[j,])^2)
+  }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ multivariate }% use one of  RShowDoc("KEYWORDS")
-\keyword{ nonparametric }% __ONLY ONE__ keyword per line
+
+cor(c(Dmat), c(SD))
+}
+\keyword{ multivariate }
+\keyword{ nonparametric }
