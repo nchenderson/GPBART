@@ -9,12 +9,11 @@ FindDistMat <- function(X, tau.max=100, weights=NULL) {
   for(u in 1:nvars) {
     Amax <- outer(X[,u], X[,u], FUN="pmax")
     Amin <- outer(X[,u], X[,u], FUN="pmin")
-    rr <- FindCutPoints(X[,u])## add tau.max 
+    rr <- FindCutPoints(X[,u], tau.max=tau.max)## add tau.max
     Gtmp <- stepfun(rr$qq, c(0,cumsum(rr$probs)), right=TRUE)
     
     Gdiff <- matrix(Gtmp(Amax), nrow=nrow(X)) - matrix(Gtmp(Amin), nrow=nrow(X))
-    print(Gdiff[1,2])
-    DistMat <- DistMat + weight.vec[u]*Gdiff
+    DistMat <- DistMat + weights[u]*Gdiff
   }
   return(DistMat)
 }
