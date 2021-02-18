@@ -1,0 +1,13 @@
+Package: GPBART
+Type: Package
+Title: Gaussian Process approximations of BART
+Version: 0.1.0
+Date: 2020-1-13
+Authors@R: c(person("Nicholas", "Henderson", email = "nchender@umich.edu", role = c("cre", "aut")))
+Maintainer: Nicholas Henderson <nchender@umich.edu>
+Imports: stats
+Depends: R (>= 3.5.0)
+Description: TBA
+License: GPL-2
+Encoding: UTF-8
+LazyData: true

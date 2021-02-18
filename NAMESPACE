@@ -1,0 +1,2 @@
+export(FindDistMat, FindCutPoints, MargLik)
+importFrom("stats", "integrate", "quantile", "stepfun")
