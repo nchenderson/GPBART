@@ -1,20 +1,42 @@
-MargLik <- function(pars, y, X, nu=3) {
-    alpha <- pars[1]
-    bbeta <- pars[2]
-    sigma.mu <- pars[3]
-    lambda <- pars[4]
+MargLogLik <- function(hyper.pars, y, X, nu=3, H = 200, weights=NULL) {
+    alpha <- hyper.pars[1]
+    bbeta <- hyper.pars[2]
+    kappa <- hyper.pars[3]
+    lambda <- hyper.pars[4]
     
     # Compute Covariance matrix bSigma here
     # This will use values of (alpha, beta, sigma.mu)
-    #SS <- bSigma
+    hp <- c(alpha, bbeta, 1/(4*kappa*kappa*H), lambda)
+    tmp <- FindCovMat(X, hyper.pars=hp, weights=weights)
+    bSigma <- H*tmp
+    SS <- bSigma
     integrand.fn <- function(u) {
-        diag(SS) <- diag(bSigma) + u   
-        ldet <- determinant(SS, logarithm=TRUE)$modulus
-        ssterm <- crossprod(y, solve(SS, y))
-        lsigprior <- (nu + 2)*log(u) + (nu*lambda)/u
-        ret <- exp(-ldet/2 - ssterm/2 - lsig.prior/2)
+        ret <- rep(NA, length(u))
+        for(k in seq_len(length(u))) {
+           diag(SS) <- diag(bSigma) + u[k]   
+           ldet <- determinant(SS, logarithm=TRUE)$modulus
+           ssterm <- as.numeric(crossprod(y, solve(SS, y)))
+           lsig.prior <- (nu + 2)*log(u[k]) + (nu*lambda)/u[k] - nu*log(lambda)
+           ret[k] <- exp(-ldet/2 - ssterm/2 - lsig.prior/2)
+        }
         return(ret)
     }
     ans <- integrate(integrand.fn, lower=0, upper=Inf)$value
-    return(ans)
+    return(-log(ans)) # return negative log-likelihood
 }
+
+#FindHypers <- function(y, X) {
+    # First transform outcomes appropriately
+#    mu.y <- (max(y) + min(y))/2
+#    s.y <- max(y) - min(y)
+#    zz <- (y - mu.y)/s.y
+    ## compute residual ...
+    
+#    lb <- c(0.5, 0.5, 0.05, 0)
+#    ub <- c(0.99, 4, 20, ?)
+#    oo <- optim(init.vals, lower=lb, upper=ub, fn=MargLik, y=zz, X=X)$par
+#    return(oo)
+#}
+
+
+
