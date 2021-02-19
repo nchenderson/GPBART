@@ -1,2 +1,2 @@
-export(FindDistMat, FindCutPoints, MargLik)
+export(FindDistMat, FindCutPoints, MargLogLik)
 importFrom("stats", "integrate", "quantile", "stepfun")
