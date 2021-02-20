@@ -6,7 +6,7 @@ FindCutPoints <- function(x, tau.max=100) {
   nw <- length(w)
   if(nw > tau.max) {
     pvec <- seq(1/tau.max, (tau.max - 1)/tau.max, by=1/tau.max)
-    qq <- c(min(x), quantile(x, prob=pvec))
+    qq <- quantile(x, prob=pvec)
     probs <- rep(1/(tau.max - 1), tau.max - 1)
     ## need to change this a bit
   } else if( nw <= tau.max) {
